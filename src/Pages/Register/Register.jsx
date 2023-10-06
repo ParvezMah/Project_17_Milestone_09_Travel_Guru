@@ -1,14 +1,14 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { TravelAuthContext } from "../../Components/AuthProvider/AuthProvider";
-import { updateProfile } from "firebase/auth";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 
 const Register = () => {
     const [showPassword1, setShowPasswrod1] = useState(false);
     const [showConfirmPasswrod, setShowConfirmPassword] = useState(false);
-    const {createUser}  = useContext(TravelAuthContext);
+    const {createUser,user}  = useContext(TravelAuthContext);
     const [success, setSuccess] = useState('');
     const [registerError, setRegisterError] = useState('');
 
@@ -56,15 +56,23 @@ const Register = () => {
             .then(result => {
                 console.log(result.user);
                 setSuccess('Account Created successfully!')
-                //updating user's profile
+
+
+                //1. updating user's profile
                 updateProfile(result.user, {
-                    displayName: name,
-                    photoURL: "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg"
+                    displayName: firstName,
+                    photoURL: user.photoURL || "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg"
                 })
+
+                // 2. Send Verification mail
+                sendEmailVerification(result.user)
+                    .then(()=>{
+                        alert('Please Check your mail Inbox');
+                    })
             })
             .catch(error => {
                 console.error(error);
-                setRegisterError(error);
+                setRegisterError(error.message);
             })
     }
 

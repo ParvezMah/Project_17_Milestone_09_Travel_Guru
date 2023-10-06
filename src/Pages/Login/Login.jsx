@@ -1,7 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { TravelAuthContext } from "../../Components/AuthProvider/AuthProvider";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
+import auth from "../../Firebase/firebase.config";
 
 
 const Login = () => { 
@@ -9,6 +11,7 @@ const Login = () => {
     const {signInUser} = useContext(TravelAuthContext);
     const [success, setSuccess] = useState('');
     const [registerError, setRegisterError] = useState('');
+    const emailRef = useRef(null);
 
     const handleLogin = e =>{
         e.preventDefault();
@@ -31,7 +34,29 @@ const Login = () => {
             })
             .catch(error => {
                 console.error(error);
-                setRegisterError(error)
+                setRegisterError(error.message)
+            })
+    }
+
+    const handleForgetPassword = () => {
+        const email = emailRef.current.value;
+        console.log('forgetPasswowrd Mail : ', email);
+        if(!email){
+            console.log('Please Provide an Email');
+            return;
+        }
+        if(!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)){
+            console.log('Please Write a valid email');
+            return;
+        }
+
+        //password reset mail
+        sendPasswordResetEmail(auth, email)
+            .then(()=>{
+                alert('Please check your email inbox')
+            })
+            .catch(error => {
+                console.error(error);
             })
     }
 
@@ -46,9 +71,9 @@ const Login = () => {
                                 <h2 className="text-4xl font-bold py-3">Login</h2>
                                 <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text font-bold">Username</span>
+                                    <span className="label-text font-bold">Username or Email</span>
                                 </label>
-                                <input type="email" name="email" placeholder="Username or Email" className="input input-bordered" required />
+                                <input type="email" ref={emailRef} name="email" placeholder="Username or Email" className="input input-bordered" required />
                                 </div>
                                 <div className="form-control relative">
                                     <label className="label">
@@ -61,16 +86,15 @@ const Login = () => {
                                                             : <FaEye></FaEye>
                                         }
                                     </span>
-                                
+                                </div>
                                 <div className="flex items-center gap-20 my-2">
                                     <div className="flex items-center">
                                         <input className="mr-2" type="checkbox" name="Remember" id="Remember" />
                                         <label htmlFor="Remember">Remember Me</label>
                                     </div>
-                                    <div>
-                                        <Link className="underline">Forgot password?</Link>
-                                    </div>
-                                </div>
+                                    <label className="label">
+                                    <a onClick={handleForgetPassword} href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                                    </label>
                                 </div>
                   
                                 <div className="form-control mt-6">
