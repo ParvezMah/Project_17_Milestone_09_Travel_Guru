@@ -1,17 +1,18 @@
 import { useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TravelAuthContext } from "../../Components/AuthProvider/AuthProvider";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
+import { FaEye, FaEyeSlash, FaFacebook, FaGithub, FaGoogle, FaInstagram, FaTwitter } from "react-icons/fa";
+import { sendPasswordResetEmail } from "firebase/auth";
 import auth from "../../Firebase/firebase.config";
 
 
 const Login = () => { 
     const [showLoginPassword, setShowLoginPassword] = useState(false);
-    const {signInUser} = useContext(TravelAuthContext);
+    const {signInUser, signInWithGoogle} = useContext(TravelAuthContext);
     const [success, setSuccess] = useState('');
     const [registerError, setRegisterError] = useState('');
     const emailRef = useRef(null);
+    const navigate = useNavigate()
 
     const handleLogin = e =>{
         e.preventDefault();
@@ -31,6 +32,8 @@ const Login = () => {
             .then(result => {
                 console.log(result.user);
                 setSuccess('User logged In Successfully')
+                e.target.reset();
+                navigate('/');
             })
             .catch(error => {
                 console.error(error);
@@ -54,6 +57,16 @@ const Login = () => {
         sendPasswordResetEmail(auth, email)
             .then(()=>{
                 alert('Please check your email inbox')
+            })
+            .catch(error => {
+                console.error(error);
+            })
+    }
+
+    const handleGoogleSignIn = () =>{
+        signInWithGoogle()
+            .then(result => {
+                console.log(result.user);
             })
             .catch(error => {
                 console.error(error);
@@ -109,6 +122,18 @@ const Login = () => {
                                 registerError && <p className="text-red-500 text-xl font-bold text-center pt-4">{registerError}</p>
                             }
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex flex-col w-full border-opacity-50">
+                    <div>
+                        <div className="divider my-10 mx-auto w-1/2">OR</div>
+                        <div className="flex flex-col gap-2 items-center justify-center">
+                            <div className="border-2 rounded-full w-[430px]"><Link onClick={handleGoogleSignIn} className="btn rounded-full m-2 btn-error"><FaGoogle className="text-white text-lg"></FaGoogle></Link><span className="text-center font-bold">Continue with Google</span></div>
+                            <div className="border-2 rounded-full w-[430px]"><Link className="btn rounded-full m-2 btn-neutral"><FaGithub className="text-white text-lg"></FaGithub></Link><span className="text-center font-bold">Continue with Github</span></div>
+                            <div className="border-2 rounded-full w-[430px]"><Link className="btn rounded-full m-2 btn-info"><FaTwitter className="text-white text-lg"></FaTwitter></Link><span className="text-center font-bold">Continue with Twitter</span></div>
+                            <div className="border-2 rounded-full w-[430px]"><Link className="btn rounded-full m-2 bg-blue-400"><FaFacebook className="text-white text-lg"></FaFacebook></Link><span className="text-center font-bold">Continue with Facebook</span></div>
+                            <div className="border-2 rounded-full w-[430px]"><Link className="btn rounded-full m-2 bg-violet-500"><FaInstagram className="text-white text-lg"></FaInstagram></Link><span className="text-center font-bold">Continue with Instagram</span></div>
                         </div>
                     </div>
                 </div>

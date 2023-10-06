@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { TravelAuthContext } from "../../Components/AuthProvider/AuthProvider";
 import { sendEmailVerification, updateProfile } from "firebase/auth";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaFacebook, FaGithub, FaGoogle, FaInstagram, FaTwitter } from "react-icons/fa";
 
 
 const Register = () => {
@@ -77,9 +77,9 @@ const Register = () => {
     }
 
     return (
+    <div>
         <div>
-        <div>
-            <div className="hero mx-auto w-[90vh] mt-10">
+            <div className="hero mx-auto mt-10">
                 <div className="bg-blue-300">
 
                     <div className="flex-shrink-0 w-full shadow-2xl bg-base-100 p-10">
@@ -145,6 +145,18 @@ const Register = () => {
                     }
                     </div>
                 </div>
+            </div>
+        </div>
+        <div className="flex flex-col w-full border-opacity-50">
+            <div>
+                <div className="divider my-10 mx-auto w-1/2">OR</div>
+                    <div className="flex flex-col gap-2 items-center justify-center">
+                        <div className="border-2 rounded-full w-[430px]"><Link className="btn rounded-full m-2 btn-error"><FaGoogle className="text-white text-lg"></FaGoogle></Link><span className="text-center font-bold">Continue with Google</span></div>
+                        <div className="border-2 rounded-full w-[430px]"><Link className="btn rounded-full m-2 btn-neutral"><FaGithub className="text-white text-lg"></FaGithub></Link><span className="text-center font-bold">Continue with Github</span></div>
+                        <div className="border-2 rounded-full w-[430px]"><Link className="btn rounded-full m-2 btn-info"><FaTwitter className="text-white text-lg"></FaTwitter></Link><span className="text-center font-bold">Continue with Twitter</span></div>
+                        <div className="border-2 rounded-full w-[430px]"><Link className="btn rounded-full m-2 bg-blue-400"><FaFacebook className="text-white text-lg"></FaFacebook></Link><span className="text-center font-bold">Continue with Facebook</span></div>
+                        <div className="border-2 rounded-full w-[430px]"><Link className="btn rounded-full m-2 bg-violet-500"><FaInstagram className="text-white text-lg"></FaInstagram></Link><span className="text-center font-bold">Continue with Instagram</span></div>
+                    </div>
             </div>
         </div>
     </div>
